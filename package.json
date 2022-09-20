@@ -1,0 +1,50 @@
+{
+	"name": "discord-snipes",
+	"version": "1.0.0",
+	"description": "Tool to easily track and save in caché deleted and updated messages.",
+	"main": "dist/index.js",
+	"author": "imluwi",
+	"license": "MIT",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"exports": {
+		"import": "./dist/index.mjs",
+		"require": "./dist/index.js",
+		"types": "./dist/index.d.ts"
+	},
+	"scripts": {
+		"build": "tsup src && tsc -b src",
+		"start": "yarn build && node .",
+		"test": "yarn build && node dist/testing.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/notbojji/discord-snipes.git"
+	},
+	"files": [
+		"dist/**/*.js*",
+		"dist/**/*.mjs*",
+		"dist/**/*.d*"
+	],
+	"devDependencies": {
+		"@sapphire/ts-config": "^3.3.4",
+		"tsup": "^6.2.3",
+		"typescript": "4.8.2"
+	},
+	"engines": {
+		"node": ">=v16.0.0",
+		"npm": ">=7.0.0"
+	},
+	"keywords": [
+		"discord",
+		"snipes",
+		"snipe",
+		"discord.js",
+		"bot",
+		"discord-bot",
+		"discord snipes",
+		"discord deleted messages",
+		"discord updated messages",
+		"discord message"
+	]
+}
