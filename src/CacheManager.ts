@@ -8,7 +8,7 @@ export class CacheManager<SnipeMessage> {
 	public readonly logger: boolean;
 
 	constructor(options: CacheManagerOptions) {
-		this.enabled = options.enabled ?? false;
+		this.enabled = options.enabled ?? true;
 		this.expires = options.expires ?? null;
 		this.clear = options.clear ?? null;
 		this.logger = options.logger ?? false;
@@ -22,8 +22,10 @@ export class CacheManager<SnipeMessage> {
 	 */
 	public inspect(id: Snowflake, collection: Collection<Snowflake, SnipeMessage | Collection<Snowflake, SnipeMessage>>) {
 		if (!this.expires || !this.enabled) return;
-		setTimeout(() => collection.delete(id), this.expires);
-		this.log(`The collection of the channel ${id} has been deleted of the cache.`);
+		setTimeout(() => {
+			collection.delete(id);
+			this.log(`The collection of the channel ${id} has been deleted of the cache.`);
+		}, this.expires);
 	}
 	/**
 	 * @param  {string} message The message that will be logged.
