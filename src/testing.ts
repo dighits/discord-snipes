@@ -1,10 +1,12 @@
 import { Client, ChannelType, Partials, ClientOptions } from 'discord.js';
 import { SnipesManager } from '.';
 import 'dotenv/config';
+import { CacheManager } from './CacheManager';
 
 class MyClass extends Client {
 	public snipes = new SnipesManager(this, {
-		properties: ['content'],
+		properties: ['content', 'attachments'],
+		cache: new CacheManager({ expires: 3.6e3 }),
 	});
 
 	constructor(options: ClientOptions) {
@@ -32,7 +34,7 @@ client.on('messageCreate', (message) => {
 			updated: client.snipes.updatedMessages,
 			bulks: client.snipes.bulkDeletedMessages,
 		});
-		message.reply({ content: sniped ? sniped.content : 'No hay ningún mensaje borrado recientemente' });
+		message.reply({ content: sniped?.content });
 	}
 });
 

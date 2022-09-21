@@ -1,4 +1,5 @@
 import type { Message } from 'discord.js';
+import type { CacheManager } from './CacheManager';
 
 export type SnipeEventEmitter = 'messageDelete' | 'messageUpdate' | 'messageDeleteBulk';
 export type SnipePropierties = (keyof Omit<Message, 'valueOf' | 'toString'>)[];
@@ -15,14 +16,17 @@ export interface DiscordSnipesOptions<Props> {
 	emitters?: SnipeEventEmitter[];
 	fetchPartials?: boolean;
 	properties?: Props;
-	cache?: SnipeCacheOptions;
+	cache?: CacheManager<Snipe<SnipePropierties>>;
 }
 
-export interface SnipeCacheOptions {
-	expires?: number;
-	clearAll?: {
-		enabled?: boolean;
-		interval?: number;
-	};
+export interface CacheManagerOptions {
+	enabled?: boolean | null;
+	expires?: number | null;
+	clear?: ClearOptions | null;
 	logger?: boolean;
+}
+
+export interface ClearOptions {
+	enabled?: true;
+	interval?: number;
 }

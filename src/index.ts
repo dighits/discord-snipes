@@ -1,5 +1,14 @@
 import { Collection, Client, Snowflake } from 'discord.js';
-import { DefaultOptions, DiscordSnipesOptions, SnipePropierties, SnipeEventEmitter, SnipeCacheOptions, Snipe } from './utils';
+import { CacheManager } from './CacheManager';
+import {
+	DefaultOptions,
+	DiscordSnipesOptions,
+	SnipePropierties,
+	SnipeEventEmitter,
+	Snipe,
+	CacheManagerOptions,
+	ClearOptions,
+} from './utils';
 
 /**
  *  This is a {@link SnipesManager}, a utility to easily track and save in cache deleted and updated messages.
@@ -37,6 +46,31 @@ import { DefaultOptions, DiscordSnipesOptions, SnipePropierties, SnipeEventEmitt
  * client.on('interactionCreate', (interaction) => {
  * 		if(interaction.isChatInputCommand() && interaction.commandName === 'snipe') {
  * 			const sniped = client.snipes.deletedMessages.get(interaction.channelId);
+ * 			return interaction.reply({ content: sniped ? sniped.content : 'No snipes in this channel.' });
+ * 		}
+ * });
+ * ```
+ *
+ * @example Advanced JavaScript example
+ * ```javascript
+ * const { Client, GatewayIntentBits } = require('discord.js');
+ * const { SnipesManager, CacheManager } = require('discord-snipes');
+ *
+ * class MyClient extends Client {
+ * 		snipes = new SnipesManager(this, {
+ * 			properties: ['content', 'author', 'attachments'],
+ * 			emitters: ['messageDelete'],
+ * 			cache: new CacheManager({ expires: 3.6e6 })
+ * 		});
+ * }
+ *
+ * const client = new MyClient({ intents: [GatewayIntentBits.GuildMessages] });
+ *
+ * client.on('interactionCreate', (interaction) => {
+ * 		if(interaction.isChatInputCommand() && interaction.commandName === 'snipe') {
+ * 			const sniped = client.snipes.deletedMessages.get(interaction.channelId);
+ * 			console.log(sniped.author) // -> User
+ * 			console.log(sniped.embeds); // -> "undefined" because it is not in the array of property "properties" of this instance of SnipesManager.
  * 			return interaction.reply({ content: sniped ? sniped.content : 'No snipes in this channel.' });
  * 		}
  * });
@@ -133,15 +167,15 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * Handles when to delete cache data.
 	 *
 	 * @example ```javascript
-	 * { expires: 3.6e6, clearAll: { enabled: true, interval: 3.6e6 * 5 } }
+	 * new CacheManager({ expires: 3.6e3, clear: { enabled: true, interval: 3.6e6 } });
 	 * ```
 	 * @default ```javascript
-	 * {}
+	 * new CacheManager({ enabled: false })
 	 * ```
 	 * @public
 	 * @readonly
 	 */
-	public readonly cache: SnipeCacheOptions;
+	public readonly cache: CacheManager<SnipeMessage>;
 
 	/**
 	 * Constructor of the {@link SnipesManager} class.
@@ -157,29 +191,30 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 		this.emitters = options?.emitters ?? DefaultOptions.Emitters;
 		this.fetchPartials = options?.fetchPartials ?? DefaultOptions.Partials;
 		this.properties = options?.properties ?? [];
-		this.cache = options?.cache ?? {};
+		this.cache = (options?.cache as CacheManager<SnipeMessage>) ?? new CacheManager({ enabled: false });
 
 		this.deleteEventExecute();
 		this.updateEventExecute();
 		this.bulkEventExecute();
 
-		const { clearAll } = this.cache;
+		const { clear } = this.cache;
 
-		if (clearAll && clearAll.enabled) setInterval(() => this.clearAll(), clearAll.interval ?? 3.6e6);
+		if (clear && clear.enabled) setInterval(() => this.clearAll(), clear.interval ?? 3.6e6);
 	}
 
 	/**
 	 * Clear all the cached messages of all collections.
 	 *
-	 * @returns void
+	 * @returns {void} void
+	 * @public
 	 */
 	public clearAll() {
 		const size = this.bulkDeletedMessages.size + this.deletedMessages.size + this.updatedMessages.size;
-		this.cache.logger && this.log('Clearing all collections...');
+		this.cache.logger && this.cache.log('Clearing all collections...');
 		this.bulkDeletedMessages.clear();
 		this.deletedMessages.clear();
 		this.updatedMessages.clear();
-		this.cache.logger && this.log(`Cleared ${size} collections.`);
+		this.cache.logger && this.cache.log(`Cleared ${size} collections.`);
 	}
 
 	private deleteEventExecute() {
@@ -191,12 +226,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 				const snipeMessage = {};
 				properties.forEach((prop) => Object.assign(snipeMessage, { [prop]: message[prop] }));
 				this.deletedMessages.set(message.channelId, snipeMessage as SnipeMessage);
-				if (cache.expires) {
-					setTimeout(() => {
-						this.deletedMessages.delete(message.channelId);
-						this.log(`The collection of the channel ${message.channelId} have been deleted of the cache.`);
-					}, cache.expires);
-				}
+				cache.inspect(message.channelId, this.deletedMessages);
 			});
 		}
 	}
@@ -210,12 +240,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 				const snipeMessage = {};
 				properties.forEach((prop) => Object.assign(snipeMessage, { [prop]: message[prop] }));
 				this.updatedMessages.set(message.channelId, snipeMessage as SnipeMessage);
-				if (cache.expires) {
-					setTimeout(() => {
-						this.updatedMessages.delete(message.channelId);
-						this.log(`The collection of the channel ${message.channelId} has been deleted of the cache.`);
-					}, cache.expires);
-				}
+				cache.inspect(message.channelId, this.updatedMessages);
 			});
 		}
 	}
@@ -233,21 +258,20 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 					bulkMessages.set(id, snipeMessage);
 				}
 				this.bulkDeletedMessages.set(channel.id, bulkMessages as Collection<string, SnipeMessage>);
-				if (cache.expires) {
-					setTimeout(() => {
-						this.bulkDeletedMessages.delete(channel.id);
-						this.log(`The collection of the channel ${channel.id} has been deleted of the cache.`);
-					}, cache.expires);
-				}
+				cache.inspect(channel.id, this.bulkDeletedMessages);
 			});
 		}
 	}
-
-	private log(message: string) {
-		return this.cache.logger && console.log(`[DISCORD_SNIPES] :: ${message}`);
-	}
 }
 
-export { DefaultOptions, DiscordSnipesOptions, SnipePropierties as SnipesPropierties, SnipeEventEmitter };
+export {
+	DefaultOptions,
+	DiscordSnipesOptions,
+	SnipePropierties,
+	SnipeEventEmitter,
+	CacheManager,
+	CacheManagerOptions,
+	ClearOptions,
+};
 
 export default SnipesManager;
