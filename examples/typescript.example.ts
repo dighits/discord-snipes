@@ -29,6 +29,6 @@ client.on('interactionCreate', (interaction) => {
 				embed.addFields({ name: 'Attachments', value: sniped.attachments.size.toString(), inline: true });
 
 			interaction.reply({ embeds: [embed] });
-		}
+		} else interaction.reply({ content: 'No recently deleted messages found.' });
 	}
 });

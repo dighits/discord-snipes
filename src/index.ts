@@ -2,7 +2,7 @@ import { Collection, Client, Snowflake } from 'discord.js';
 import { CacheManager } from './CacheManager';
 import {
 	DefaultOptions,
-	DiscordSnipesOptions,
+	SnipesManagerOptions,
 	SnipePropierties,
 	SnipeEventEmitter,
 	Snipe,
@@ -189,16 +189,16 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * Constructor of the {@link SnipesManager} class.
 	 *
 	 * @param  {Client} client The {@linkplain Client Discord Client}.
-	 * @param  {DiscordSnipesOptions<Props>} options? The {@link DiscordSnipesOptions} for this instance of the {@link SnipesManager} class.
+	 * @param  {SnipesManagerOptions<Props>} options? The {@link SnipesManagerOptions} for this instance of the {@link SnipesManager} class.
 	 */
-	constructor(client: Client, options?: DiscordSnipesOptions<Props>) {
+	constructor(client: Client, options?: SnipesManagerOptions<Props>) {
 		this.client = client;
 		this.deletedMessages = new Collection();
 		this.updatedMessages = new Collection();
 		this.bulkDeletedMessages = new Collection();
 		this.emitters = options?.emitters ?? DefaultOptions.Emitters;
 		this.fetchPartials = options?.fetchPartials ?? DefaultOptions.Partials;
-		this.properties = options?.properties ?? [];
+		this.properties = options?.properties ?? DefaultOptions.Properties;
 		this.cache = (options?.cache as CacheManager<SnipeMessage>) ?? new CacheManager({ enabled: false });
 
 		this.deleteEventExecute();
@@ -274,7 +274,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 
 export {
 	DefaultOptions,
-	DiscordSnipesOptions,
+	SnipesManagerOptions,
 	SnipePropierties,
 	SnipeEventEmitter,
 	CacheManager,

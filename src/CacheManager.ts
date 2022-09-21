@@ -1,5 +1,5 @@
-import type { Collection, Snowflake } from 'discord.js';
-import type { CacheManagerOptions, ClearOptions } from './utils';
+import type { Snowflake } from 'discord.js';
+import type { CacheManagerOptions, ClearOptions, InspectCollection } from './utils';
 
 export class CacheManager<SnipeMessage> {
 	/**
@@ -69,13 +69,15 @@ export class CacheManager<SnipeMessage> {
 		this.logger = options.logger ?? false;
 	}
 	/**
+	 * Inspect a collection.
+	 *
 	 * @param  {Snowflake} id The id of the channel.
-	 * @param  {Collection<Snowflake, SnipeMessage | Collection<Snowflake, SnipeMessage>>} collection The collection to be inspected.
+	 * @param  {InspectCollection<SnipeMessage>} collection The collection to be inspected.
 	 *
 	 * @returns {void} void
 	 * @public
 	 */
-	public inspect(id: Snowflake, collection: Collection<Snowflake, SnipeMessage | Collection<Snowflake, SnipeMessage>>) {
+	public inspect(id: Snowflake, collection: InspectCollection<SnipeMessage>) {
 		if (!this.expires || !this.enabled) return;
 		setTimeout(() => {
 			collection.delete(id);

@@ -1,6 +1,6 @@
 {
 	"name": "discord-snipes",
-	"version": "beta",
+	"version": "1.0.0",
 	"description": "Tool to easily track and cache deleted and updated messages.",
 	"main": "dist/index.js",
 	"author": "imluwi",
