@@ -1,7 +1,7 @@
 {
 	"name": "discord-snipes",
 	"version": "1.0.0",
-	"description": "Tool to easily track and save in caché deleted and updated messages.",
+	"description": "Tool to easily track and save in cache deleted and updated messages.",
 	"main": "dist/index.js",
 	"author": "imluwi",
 	"license": "MIT",
@@ -28,6 +28,7 @@
 	],
 	"devDependencies": {
 		"@sapphire/ts-config": "^3.3.4",
+		"dotenv": "^16.0.2",
 		"tsup": "^6.2.3",
 		"typescript": "4.8.2"
 	},
@@ -46,5 +47,8 @@
 		"discord deleted messages",
 		"discord updated messages",
 		"discord message"
-	]
+	],
+	"dependencies": {
+		"discord.js": "^14.3.0"
+	}
 }
