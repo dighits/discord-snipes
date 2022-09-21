@@ -85,6 +85,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * const client = new Client({ intents: [GatewayIntentBits.GuildMessages] });
 	 * ```
 	 *
+	 * @type {Client}
 	 * @public
 	 * @readonly
 	 */
@@ -96,6 +97,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * new Collection()
 	 * ```
+	 * @type {Collection<Snowflake, SnipeMessage>}
 	 * @public
 	 * @readonly
 	 */
@@ -107,6 +109,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * new Collection()
 	 * ```
+	 * @type {Collection<Snowflake, SnipeMessage>}
 	 * @public
 	 * @readonly
 	 */
@@ -118,6 +121,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * new Collection()
 	 * ```
+	 * @type {Collection<Snowflake, Collection<Snowflake, SnipeMessage>>}
 	 * @public
 	 * @readonly
 	 */
@@ -133,6 +137,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * ['messageDelete', 'messageUpdate']
 	 * ```
+	 * @type {SnipeEventEmitter[]}
 	 * @public
 	 * @readonly
 	 */
@@ -144,6 +149,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * false
 	 * ```
+	 * @type {boolean}
 	 * @public
 	 * @readonly
 	 */
@@ -158,6 +164,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * []
 	 * ```
+	 * @type {SnipePropierties}
 	 * @public
 	 * @readonly
 	 */
@@ -172,6 +179,7 @@ export class SnipesManager<Props extends SnipePropierties, SnipeMessage = Snipe<
 	 * @default ```javascript
 	 * new CacheManager({ enabled: false })
 	 * ```
+	 * @type {CacheManager<SnipeMessage>}
 	 * @public
 	 * @readonly
 	 */

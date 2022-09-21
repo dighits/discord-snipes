@@ -1,7 +1,7 @@
 {
 	"name": "discord-snipes",
-	"version": "1.0.0",
-	"description": "Tool to easily track and save in cache deleted and updated messages.",
+	"version": "beta",
+	"description": "Tool to easily track and cache deleted and updated messages.",
 	"main": "dist/index.js",
 	"author": "imluwi",
 	"license": "MIT",
@@ -50,5 +50,8 @@
 	],
 	"dependencies": {
 		"discord.js": "^14.3.0"
+	},
+	"peerDependencies": {
+		"discord.js": ">=13.0.0"
 	}
 }
