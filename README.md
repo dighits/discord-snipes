@@ -74,12 +74,12 @@ client.on('interactionCreate', (interaction) => {
 
 ### SnipesManager — Options
 
-| Property          | Type                  | Optional | Default                                          |
-| ----------------- | --------------------- | -------- | ------------------------------------------------ |
-| **cache**         | `CacheManager`        | yes      | `new CacheManager({ enabled: false })`           |
-| **emitters**      | `SnipeEventEmitter[]` | yes      | `['messageDelete', 'messageUpdate']`             |
-| **fetchPartials** | `boolean`             | yes      | `false`                                          |
-| **properties**    | `SnipeProperties`     | yes      | `['content', 'embeds', 'author', 'attachments']` |
+| Property          | Type                                                                    | Optional | Default                                          |
+| ----------------- | ----------------------------------------------------------------------- | -------- | ------------------------------------------------ |
+| **cache**         | [CacheManager](https://github.com/notbojji/discord-snipes#cachemanager) | yes      | `new CacheManager({ enabled: false })`           |
+| **emitters**      | [SnipeEventEmitter](https://github.com/notbojji/discord-snipes#types)[] | yes      | `['messageDelete', 'messageUpdate']`             |
+| **fetchPartials** | `boolean`                                                               | yes      | `false`                                          |
+| **properties**    | [SnipeProperties](https://github.com/notbojji/discord-snipes#types)     | yes      | `['content', 'embeds', 'author', 'attachments']` |
 
 ### SnipesManager — Methods
 
@@ -91,12 +91,12 @@ client.on('interactionCreate', (interaction) => {
 
 ### CacheManager — Options
 
-| Property    | Type           | Optional | Default |
-| ----------- | -------------- | -------- | ------- |
-| **clear**   | `ClearOptions` | yes      | `null`  |
-| **enabled** | `boolean`      | yes      | `true`  |
-| **expires** | `number`       | yes      | `null`  |
-| **logger**  | `boolean`      | yes      | `false` |
+| Property    | Type                                                                             | Optional | Default |
+| ----------- | -------------------------------------------------------------------------------- | -------- | ------- |
+| **clear**   | [ClearOptions](https://github.com/notbojji/discord-snipes#options--clearoptions) | yes      | `null`  |
+| **enabled** | `boolean`                                                                        | yes      | `true`  |
+| **expires** | `number`                                                                         | yes      | `null`  |
+| **logger**  | `boolean`                                                                        | yes      | `false` |
 
 ### Options — ClearOptions
 
@@ -107,15 +107,15 @@ client.on('interactionCreate', (interaction) => {
 
 ### CacheManager — Methods
 
-| Method      | Description           | Parameters                                         | Returns |
-| ----------- | --------------------- | -------------------------------------------------- | ------- |
-| **inspect** | Inspect a collection. | `id`: Snowflake<br>`collection`: InspectCollection | `void`  |
+| Method      | Description           | Parameters                                                                                                                                                                | Returns |
+| ----------- | --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| **inspect** | Inspect a collection. | `id`: [Snowflake](https://discord.js.org/#/docs/discord.js/main/typedef/Snowflake)<br>`collection`: [InspectCollection](https://github.com/notbojji/discord-snipes#types) | `void`  |
 
 ## Types
 
-| Name                  | Type                                                                       | Generic |
-| --------------------- | -------------------------------------------------------------------------- | ------- |
-| **InspectCollection** | Collection<Snowflake, SnipeMessage \| Collection<Snowflake, SnipeMessage>> | yes     |
-| **SnipeEventEmitter** | 'messageDelete' \| 'messageUpdate' \| 'messageDeleteBulk'                  | no      |
-| **SnipePropierties**  | (keyof Omit<Message, 'valueOf' \| 'toString'>)[]                           | no      |
-| **Snipe**             | { [key in Props[number]]: Message[key] }                                   | yes     |
+| Name                  | Type                                                                                                                                                                                                                                                                                                                                                 | Generic |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
+| **InspectCollection** | [Collection](https://discord.js.org/#/docs/collection/main/class/Collection)<[Snowflake](https://discord.js.org/#/docs/discord.js/main/typedef/Snowflake), SnipeMessage \| [Collection](https://discord.js.org/#/docs/collection/main/class/Collection)<[Snowflake](https://discord.js.org/#/docs/discord.js/main/typedef/Snowflake), SnipeMessage>> | yes     |
+| **SnipeEventEmitter** | 'messageDelete' \| 'messageUpdate' \| 'messageDeleteBulk'                                                                                                                                                                                                                                                                                            | no      |
+| **SnipePropierties**  | (keyof Omit<[Message](https://discord.js.org/#/docs/discord.js/main/class/Message), 'valueOf' \| 'toString'>)[]                                                                                                                                                                                                                                      | no      |
+| **Snipe**             | { [key in Props[number]]: [Message](https://discord.js.org/#/docs/discord.js/main/class/Message)[key] }                                                                                                                                                                                                                                              | yes     |
